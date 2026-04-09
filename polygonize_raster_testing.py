@@ -48,3 +48,10 @@ else:
     polygonized_raster_gdf = gpd.GeoDataFrame.from_features(list(results), crs=image_1.crs)
 
 polygonized_raster_gdf.to_file(polygonized_raster_destination, driver = 'GPKG')
+try:
+    full_polygon = gpd.GeoDataFrame(geometry=[polygonized_raster_gdf.geometry.union_all()], crs=src.crs)
+except:
+    full_polygon = gpd.GeoDataFrame(geometry=[polygonized_raster_gdf.geometry.union_all()], crs=image_1.crs)
+
+outline_shp_destination = polygonized_raster_destination.split('.gpkg')[0]+'_outline.shp'
+full_polygon.to_file(outline_shp_destination)
